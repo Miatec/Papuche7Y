@@ -44,26 +44,26 @@
 		document.getElementById("nowDate").innerHTML = dateNow;
 		
 		
-		var nbMsY = 365.25 * 24 * 60 * 60 * 1000;
+		/*var nbMsY = 365.25 * 24 * 60 * 60 * 1000;
 		var nbMsM = 30.4375 * 24 * 60 * 60 * 1000;
 		var nbMsD = 24 * 60 * 60 * 1000;
 		var nbMsH = 60 * 60 * 1000;
 		var nbMsM = 60 * 1000;
-		var nbMsS = 1000;
+		var nbMsS = 1000;*/
 		
 		var timeDiffMs = Math.abs(dateNow.getTime() - dateStart.getTime());
 				
-		var nbYears = timeDiffMs / nbMsY;
+		/*var nbYears = timeDiffMs / nbMsY;
 		var nbMonth = (nbYears - Math.floor(nbYears)) % nbMsM;
 		var nbDays = (nbMonth - Math.floor(nbMonth)) % nbMsD;
 		var nbHours = (nbDays - Math.floor(nbDays)) % nbMsH;
 		var nbMinutes = (nbHours - Math.floor(nbHours)) % nbMsM;
-		var nbSec = (nbMinutes - Math.floor(nbMinutes)) % nbMsS;
+		var nbSec = (nbMinutes - Math.floor(nbMinutes)) % nbMsS;*/
 		
 		
 		
 		
-/*		console.log(timeDiffMs);
+		console.log(timeDiffMs);
 		var diffDays = Math.ceil(timeDiffMs / (1000 * 3600 * 24)); 
 		
 		var nbYears = Math.floor(diffDays / 365.25);
@@ -73,7 +73,7 @@
 		var nbDaysLeftFromMonthF = Math.floor(nbDaysLeft % 30.4375);
 		var nbHoursLeftFromDay = (nbDaysLeftFromMonth - Math.floor(nbDaysLeftFromMonth)) * 24;
 		var nbMinutesLeftFromHours = (nbHoursLeftFromDay - Math.floor(nbHoursLeftFromDay)) * 60;
-		var nbSecondesLeftFromHours = (nbMinutesLeftFromHours - Math.floor(nbMinutesLeftFromHours)) * 60;*/
+		var nbSecondesLeftFromHours = (nbMinutesLeftFromHours - Math.floor(nbMinutesLeftFromHours)) * 60;
 		
 		
 		
