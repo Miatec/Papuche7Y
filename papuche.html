@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<header>
+	<script>
+	
+
+	
+	function requestNow() {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		  document.getElementById("demo").innerHTML =
+		  this.responseText;
+		}
+	  };
+	  xhttp.open("GET", "http://api.population.io:80/1.0/population/World/2015-12-24/", true);
+	  xhttp.send();
+	}
+	
+	function requestStartup() {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		  document.getElementById("debut").innerHTML =
+		  this.responseText + "(now)";
+		}
+	  };
+	  xhttp.open("GET", "http://api.population.io:80/1.0/population/World/2011-04-12", true);
+	  xhttp.send();
+	}
+	
+	function loadDoc(){
+		fillStart();
+		fillDates();
+		callApi("http://api.population.io:80/1.0/population/World/2015-04-12", updateNow);
+	}
+	
+	function fillDates()
+	{
+		dateNow = new Date();
+		dateStart = new Date(2011,03,12,20,0,0);
+		
+		document.getElementById("startDate").innerHTML = dateStart;
+		document.getElementById("nowDate").innerHTML = dateNow;
+		
+		
+		var nbMsY = 365.25 * 24 * 60 * 60 * 1000;
+		var nbMsM = 30.4375 * 24 * 60 * 60 * 1000;
+		var nbMsD = 24 * 60 * 60 * 1000;
+		var nbMsH = 60 * 60 * 1000;
+		var nbMsM = 60 * 1000;
+		var nbMsS = 1000;
+		
+		var timeDiffMs = Math.abs(dateNow.getTime() - dateStart.getTime());
+				
+		var nbYears = timeDiffMs / nbMsY;
+		var nbMonth = (nbYears - Math.floor(nbYears)) % nbMsM;
+		var nbDays = (nbMonth - Math.floor(nbMonth)) % nbMsD;
+		var nbHours = (nbDays - Math.floor(nbDays)) % nbMsH;
+		var nbMinutes = (nbHours - Math.floor(nbHours)) % nbMsM;
+		var nbSec = (nbMinutes - Math.floor(nbMinutes)) % nbMsS;
+		
+		
+		
+		
+/*		console.log(timeDiffMs);
+		var diffDays = Math.ceil(timeDiffMs / (1000 * 3600 * 24)); 
+		
+		var nbYears = Math.floor(diffDays / 365.25);
+		var nbDaysLeft = diffDays % 365.25;
+		var nbMonth = Math.floor(nbDaysLeft / 30.4375);
+		var nbDaysLeftFromMonth = nbDaysLeft % 30.4375;
+		var nbDaysLeftFromMonthF = Math.floor(nbDaysLeft % 30.4375);
+		var nbHoursLeftFromDay = (nbDaysLeftFromMonth - Math.floor(nbDaysLeftFromMonth)) * 24;
+		var nbMinutesLeftFromHours = (nbHoursLeftFromDay - Math.floor(nbHoursLeftFromDay)) * 60;
+		var nbSecondesLeftFromHours = (nbMinutesLeftFromHours - Math.floor(nbMinutesLeftFromHours)) * 60;*/
+		
+		
+		
+		
+		
+		var labelYear = nbYears > 1 ? " années " : " année ";
+		var labelDay = nbDaysLeftFromMonth > 1 ? " jours " :" jours ";
+		var labelHours = nbHoursLeftFromDay > 1 ? " heures " :" heure ";
+		var labelMinutes = nbMinutesLeftFromHours > 1 ? " minutes " :" minute ";
+		var labelSecondes = nbSecondesLeftFromHours > 1 ? " secondes " :" seconde ";
+		
+		var diffText = 				nbYears + labelYear ;
+		var diffText = diffText + 	nbMonth + " mois " ;
+		var diffText = diffText + 	nbDaysLeftFromMonthF + labelDay;
+		var diffText = diffText + 	Math.floor(nbHoursLeftFromDay) + labelHours;
+		var diffText = diffText + 	Math.floor(nbHoursLeftFromDay) + labelMinutes;
+		var diffText = diffText + 	Math.floor(nbSecondesLeftFromHours) + labelSecondes;
+		
+		
+		
+		document.getElementById("diff").innerHTML = diffText;
+	
+	}
+	
+	function updateNow(xhttp) {
+		//window.alert("now");
+		res=xhttp.responseText;
+		jsonObj= JSON.parse(res)
+	  document.getElementById("demo").innerHTML = res + "(now)";
+	  document.getElementById("demo2").innerHTML = getLisibleNumber(jsonObj.total_population.population);
+	}
+	function fillStart() {
+		
+		document.getElementById("start").innerHTML =  getLisibleNumber(6942744958);
+	}
+	
+	function getLisibleNumber(number){
+		return new Intl.NumberFormat().format(number)
+	}
+	function callApi(url, cFunction) {
+	  var xhttp;
+	  xhttp=new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		  cFunction(this);
+		}
+	 };
+	  xhttp.open("GET", url, true);
+	  xhttp.send();
+	}
+	
+	
+	</script>
+</header>
+<body onload="loadDoc()">
+
+<div>Date debut: <div id="startDate"></div></div>
+<div>Date Now: <div id="nowDate"></div></div>
+<div>diff <div id="diff"></div></div>
+<p>il y a x annee je t'ai choisie parmie</p>
+<div id="start">debut</div>
+<div id="demo">demo</div>
+<div id="demo2">demo2</div>
+
+
+</body>
+</html>
