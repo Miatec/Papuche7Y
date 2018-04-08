@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <header>
+	<meta charset="utf-8">
 	<script>
 	
 
@@ -32,38 +33,77 @@
 	function loadDoc(){
 		fillStart();
 		fillDates();
-		callApi("http://api.population.io:80/1.0/population/World/2015-04-12", updateNow);
+        var nowDate = new Date();
+        var nowDateStr = dateToString(nowDate);
+        var yesterdayDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate() > 1 ? (nowDate.getDate()-1):(nowDate.getDate()));
+        var yesterdayDateStr = dateToString(yesterdayDate);
+        console.log("yesterday : " + yesterdayDate );
+        console.log("nowDate : " + nowDate );
+        callApi("http://api.population.io:80/1.0/population/World/"+yesterdayDateStr, setYesterdayPopulation);
+		callApi("http://api.population.io:80/1.0/population/World/"+nowDateStr, updateNow);
+     
 	}
 	
+
+
+
+    function dateToString(d)
+    {
+        return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+    }
 	function fillDates()
 	{
 		dateNow = new Date();
 		dateStart = new Date(2011,03,12,20,0,0);
 		
-		document.getElementById("startDate").innerHTML = dateStart;
-		document.getElementById("nowDate").innerHTML = dateNow;
+		//document.getElementById("startDate").innerHTML = dateStart;
+		//document.getElementById("nowDate").innerHTML = dateToString(dateNow);
 		
 		
-		/*var nbMsY = 365.25 * 24 * 60 * 60 * 1000;
-		var nbMsM = 30.4375 * 24 * 60 * 60 * 1000;
+		var nbMsY = 365.25  * 24 * 60 * 60 * 1000;
+		var nbMsMo = 30.4375 * 24 * 60 * 60 * 1000;
 		var nbMsD = 24 * 60 * 60 * 1000;
 		var nbMsH = 60 * 60 * 1000;
-		var nbMsM = 60 * 1000;
-		var nbMsS = 1000;*/
+		var nbMsMi = 60 * 1000;
+		var nbMsS = 1000;
 		
 		var timeDiffMs = Math.abs(dateNow.getTime() - dateStart.getTime());
-				
-		/*var nbYears = timeDiffMs / nbMsY;
-		var nbMonth = (nbYears - Math.floor(nbYears)) % nbMsM;
-		var nbDays = (nbMonth - Math.floor(nbMonth)) % nbMsD;
-		var nbHours = (nbDays - Math.floor(nbDays)) % nbMsH;
-		var nbMinutes = (nbHours - Math.floor(nbHours)) % nbMsM;
-		var nbSec = (nbMinutes - Math.floor(nbMinutes)) % nbMsS;*/
+		var nbYears = Math.floor(timeDiffMs / nbMsY);
+		var nbMsLeft = timeDiffMs - (nbYears*nbMsY);
+
+		var nbMonth = Math.floor(nbMsLeft / nbMsMo);
+		nbMsLeft = nbMsLeft % nbMsMo;
+
+		var nbDays = Math.floor(nbMsLeft / nbMsD);
+		nbMsLeft = nbMsLeft % nbMsD;
+
+		var nbHours = Math.floor(nbMsLeft / nbMsH);
+		nbMsLeft = nbMsLeft % nbMsH;
+
+		var nbMinutes = Math.floor(nbMsLeft / nbMsMi);
+		nbMsLeft = nbMsLeft % nbMsMi;
+
+		var nbSec = Math.floor(nbMsLeft / nbMsS);
+		nbMsLeft = nbMsLeft % nbMsS;
+		
+
+		var labelYear = nbYears > 1 ? " années " : " année ";
+		// "Mois" and "Jours" are always plural
+		var labelHours = nbHours > 1 ? " heures " :" heure ";
+		var labelMinutes = nbMinutes > 1 ? " minutes " :" minute ";
+		var labelSecondes = nbSec > 1 ? " secondes " :" seconde ";
+		
+		var diffText = 				nbYears + labelYear ;
+		diffText = diffText + 	nbMonth + " mois " ;
+		diffText = diffText + 	nbDays + " jours ";
+		diffText = diffText + 	nbHours + labelHours;
+		diffText = diffText + 	nbMinutes + labelMinutes;
+		diffText = diffText + 	nbSec + labelSecondes;
+
+
 		
 		
-		
-		
-		console.log(timeDiffMs);
+		/*console.log(timeDiffMs);
 		var diffDays = Math.ceil(timeDiffMs / (1000 * 3600 * 24)); 
 		
 		var nbYears = Math.floor(diffDays / 365.25);
@@ -73,13 +113,13 @@
 		var nbDaysLeftFromMonthF = Math.floor(nbDaysLeft % 30.4375);
 		var nbHoursLeftFromDay = (nbDaysLeftFromMonth - Math.floor(nbDaysLeftFromMonth)) * 24;
 		var nbMinutesLeftFromHours = (nbHoursLeftFromDay - Math.floor(nbHoursLeftFromDay)) * 60;
-		var nbSecondesLeftFromHours = (nbMinutesLeftFromHours - Math.floor(nbMinutesLeftFromHours)) * 60;
+		var nbSecondesLeftFromHours = (nbMinutesLeftFromHours - Math.floor(nbMinutesLeftFromHours)) * 60;*/
 		
 		
 		
 		
 		
-		var labelYear = nbYears > 1 ? " années " : " année ";
+		/*var labelYear = nbYears > 1 ? " années " : " année ";
 		var labelDay = nbDaysLeftFromMonth > 1 ? " jours " :" jours ";
 		var labelHours = nbHoursLeftFromDay > 1 ? " heures " :" heure ";
 		var labelMinutes = nbMinutesLeftFromHours > 1 ? " minutes " :" minute ";
@@ -90,11 +130,11 @@
 		var diffText = diffText + 	nbDaysLeftFromMonthF + labelDay;
 		var diffText = diffText + 	Math.floor(nbHoursLeftFromDay) + labelHours;
 		var diffText = diffText + 	Math.floor(nbHoursLeftFromDay) + labelMinutes;
-		var diffText = diffText + 	Math.floor(nbSecondesLeftFromHours) + labelSecondes;
+		var diffText = diffText + 	Math.floor(nbSecondesLeftFromHours) + labelSecondes;*/
 		
 		
 		
-		document.getElementById("diff").innerHTML = diffText;
+		document.getElementById("diff").innerHTML = diffText + ",";
 	
 	}
 	
@@ -102,8 +142,16 @@
 		//window.alert("now");
 		res=xhttp.responseText;
 		jsonObj= JSON.parse(res)
-	  document.getElementById("demo").innerHTML = res + "(now)";
-	  document.getElementById("demo2").innerHTML = getLisibleNumber(jsonObj.total_population.population);
+        todayPopulation = jsonObj.total_population.population;
+	    document.getElementById("populationNow").innerHTML = getLisibleNumber(jsonObj.total_population.population);
+        console.log("today : "+ todayPopulation);
+        if(yesterdayPopulation !== null) {
+            extrapolation(todayPopulation, yesterdayPopulation !== null ? yesterdayPopulation : todayPopulation);
+        }
+        else
+        {
+            console.log("Yesterday was null");
+        }
 	}
 	function fillStart() {
 		
@@ -125,18 +173,61 @@
 	  xhttp.send();
 	}
 	
+    var yesterdayPopulation = null;
+    var todayPopulation  = 0;
+    function setYesterdayPopulation(xhttp){
+		res=xhttp.responseText;
+		jsonObj= JSON.parse(res)
+        console.log("Yesterday : "+ jsonObj.total_population.population);
+        console.log("totay : "+ todayPopulation);
+	    yesterdayPopulation = jsonObj.total_population.population;
+    }
+
+    function extrapolation (popThisMorning, popyesterday)
+    {
+        var nbBirth = popThisMorning - popyesterday;
+        var nbSecByDay = 60 * 60 * 24;
+        var nbBirthBySec = nbBirth/nbSecByDay;
+
+        console.log("nbBirthYesterday : " + nbBirth + " -- nbBirthBySec=" +nbBirthBySec);
+		dateNow = new Date();
+		dateThisMorning = new Date(dateNow.getFullYear(),dateNow.getMonth(),dateNow.getDate(),0,0,0);
+        var diffSec = Math.abs(dateNow.getTime() - dateThisMorning.getTime()) / 1000;
+
+        console.log("diff Sec = "+ diffSec);
+        var popNow = Math.floor(popThisMorning + (diffSec*nbBirthBySec));
+        document.getElementById("populationNow").innerHTML = getLisibleNumber(popNow);
+        console.log("Population extrapolé : "+ popNow);
+
+    }
 	
 	</script>
+	<meta http-equiv="Refresh" content="1">
 </header>
-<body onload="loadDoc()">
+<body onload="loadDoc()" style="margin: 0 auto; background-color: rgb(41, 41, 52)">
 
-<div>Date debut: <div id="startDate"></div></div>
-<div>Date Now: <div id="nowDate"></div></div>
-<div>diff <div id="diff"></div></div>
-<p>il y a x annee je t'ai choisie parmie</p>
-<div id="start">debut</div>
-<div id="demo">demo</div>
-<div id="demo2">demo2</div>
+<!--<div>Date debut: <div id="startDate"></div></div>
+<div>Date Now: <div id="nowDate"></div></div>-->
+<div style="margin: 0 auto; 
+            background-color:rgb(0, 120, 215);
+            padding-top:10%;
+            padding-bottom:10%;
+            
+            margin-top:25px;
+            width:80%;
+            height: 80%;
+            text-align:center;
+            font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;">
+
+        <p>Il y a </p>
+        <div id="diff"></div>
+        <p>je t'ai choisie parmi</p>
+        <div id="start"></div>
+        <p>Aujourd'hui, tu es toujours la seule qui me plait parmi</p>
+        <div id="populationNow"></div> 
+        <p>personnes</p>
+
+</div>
 
 
 </body>
