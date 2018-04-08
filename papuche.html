@@ -42,6 +42,7 @@
         callApi("http://api.population.io:80/1.0/population/World/"+yesterdayDateStr, setYesterdayPopulation);
 		callApi("http://api.population.io:80/1.0/population/World/"+nowDateStr, updateNow);
      
+		window.setInterval(refreshLabels, 1000);
 	}
 	
 
@@ -201,8 +202,15 @@
 
     }
 	
+	
+	
+	function refreshLabels()
+	{
+		extrapolation(todayPopulation, yesterdayPopulation);
+		fillDates();
+	}
 	</script>
-	<meta http-equiv="Refresh" content="1">
+	<!-- <meta http-equiv="Refresh" content="1"> -->
 </header>
 <body onload="loadDoc()" style="margin: 0 auto; background-color: rgb(41, 41, 52)">
 
